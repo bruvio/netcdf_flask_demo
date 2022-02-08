@@ -15,26 +15,27 @@ print(DATA)
 #graphe_test= px.scatter(DATA,x=DATA.x,y=DATA.y)               
 
 
+
 def create_figure(column_x, column_y):
     return px.scatter(DATA,x=column_x,y=column_y)
     
 app.layout = html.Div([
-                       html.Button(" + Add scatter plot", id="add-scatter-plot", n_clicks=0),
+                       html.Button(" add new scatter plot", id="scatter_plot", n_clicks=0),
                        html.Div(),
-                       html.Div(id='scatter-plot', children=[]) 
+                       html.Div(id='new_scatter_plot', children=[]) 
                      ])
 
-@app.callback( Output('scatter-plot', 'children'),
-               [Input('add-scatter-plot', 'n_clicks')],
-               [State('scatter-plot', 'children')])
+@app.callback( Output('new_scatter_plot', 'children'),
+               [Input('scatter_plot', 'n_clicks')],
+               [State('new_scatter_plot', 'children')])
 
 def ajouter_graphe(n_clicks, children):
     
-    nouvelle_zone_graphe = html.Div(
+    new_scatter_plot = html.Div(
         style={'width': '23%', 'display': 'inline-block', 'outline': 'thin lightgrey solid', 'padding': 10},
         children=[
                   dcc.Graph(
-                            id ={'type': 'scatter-plot',
+                            id ={'type': 'Scatter_Plot',
                                  'index': n_clicks}
                             ),
                   
@@ -56,10 +57,10 @@ def ajouter_graphe(n_clicks, children):
                                value = None
                               ), 
                  ])
-    children.append(nouvelle_zone_graphe)
+    children.append(new_scatter_plot)
     return children
  
-@app.callback( Output({'type':'add-scatter-plot', 'index':MATCH},'figure'),
+@app.callback( Output({'type':'Scatter_Plot', 'index':MATCH},'figure'),
               [Input({'type':'Selection_variable_X', 'index':MATCH}, 'value'),
                Input({'type':'Selection_variable_Y', 'index':MATCH}, 'value')]              
              )
@@ -67,7 +68,6 @@ def display_output(column_x,column_y):
     if column_x is None and column_y is None:
         raise dash.exceptions.PreventUpdate
     return create_figure(column_x, column_y)
-
   
 
 
