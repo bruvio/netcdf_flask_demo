@@ -10,10 +10,6 @@ import pandas as pd
 app = dash.Dash(name="EFIT_DEMO")
                 
 DATA = pd.read_csv('demo.txt', sep=';')
-print(DATA)
-
-#graphe_test= px.scatter(DATA,x=DATA.x,y=DATA.y)               
-
 
 
 def create_figure(column_x, column_y):

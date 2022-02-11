@@ -8,6 +8,10 @@ authors = ["bruvio <bruno.viola@pm.me>"]
 python = "^3.8"
 dash = "^2.1.0"
 pandas = "^1.4.0"
+netCDF4 = "^1.5.8"
+matplotlib = "^3.5.1"
+PyQt5 = "^5.15.6"
+jupyter = "^1.0.0"
 
 [tool.poetry.dev-dependencies]
 
