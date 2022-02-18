@@ -8,29 +8,29 @@ from PyQt5.QtCore import pyqtRemoveInputHook
 from netCDF4 import Dataset
 
 
-def pyqt_set_trace():
-    """Set a tracepoint in the Python debugger that works with Qt"""
+# def pyqt_set_trace():
+#     """Set a tracepoint in the Python debugger that works with Qt"""
 
-    pyqtRemoveInputHook()
-    # pdb.set_trace()
-    # set up the debugger
-    debugger = pdb.Pdb()
-    debugger.reset()
-    # custom next to get outside of function scope
-    debugger.do_next(None)  # run the next command
-    users_frame = (
-        sys._getframe().f_back
-    )  # frame where the user invoked `pyqt_set_trace()`
-    debugger.interaction(users_frame, None)
+#     pyqtRemoveInputHook()
+#     # pdb.set_trace()
+#     # set up the debugger
+#     debugger = pdb.Pdb()
+#     debugger.reset()
+#     # custom next to get outside of function scope
+#     debugger.do_next(None)  # run the next command
+#     users_frame = (
+#         sys._getframe().f_back
+#     )  # frame where the user invoked `pyqt_set_trace()`
+#     debugger.interaction(users_frame, None)
 
 
-def exes(mn, mx, /, *, scale=0.02):
+def exes(mn, mx, scale=0.02):
     "expand axes by scale"
     r = (mx - mn) * scale
     return mn - r, mx + r
 
 
-def lexes(mn, mx, /, *, scale=0.02):
+def lexes(mn, mx, scale=0.02):
     "expand log axes by scale"
     assert mn > 0
     assert mx > 0
@@ -73,10 +73,16 @@ z_grid = ds["/output/profiles2D/z"][:]
 # LCMS
 geometry_boundary = ds["/output/separatrixGeometry/boundaryCoords"][:]
 
+# import pdb
+
+# pdb.set_trace()
 poloidal_flux = ds["/output/profiles2D/poloidalFlux"][:]
 
 axis_color = "lightgoldenrodyellow"
 
+td = np.empty((len(time), 2, 2))
+td[:, 0, 0] = time
+td[:, 1, 0] = time
 
 fig = plt.figure(figsize=(20, 15))
 # heights1 = [3, 3]
@@ -116,6 +122,12 @@ chi_mn, chi_mx = lexes(0.1, 100)
 
 ax_chi2.fill_between(chi_tr, 0, 1, color="lightgreen", alpha=0.2)
 chi_pc = ax_chi2.scatter([], [])
+use = weight[:, 1] != 0
+chi_pc.set_offsets(np.array([time, np.clip(chi2[:, 1], chi_mn, chi_mx)]).T[use])
+comp = magnetic_probes["computed"][:, 1]
+axc.set_data(time, comp)
+axt.set_segments(td[use])
+
 ax_chi2.semilogy()
 ax_chi2.set_xlim(chi_tr)
 ax_chi2.set_ylim(chi_mn, chi_mx)
@@ -130,13 +142,13 @@ time_slider = Slider(
 # Draw another slider
 probe_slider_ax = fig.add_axes([0.25, 0.02, 0.65, 0.03], facecolor=axis_color)
 probe_slider = Slider(
-    probe_slider_ax, "ProbeID", 0, num_probes - 1, valinit=0, valstep=range(num_probes)
+    probe_slider_ax,
+    "ProbeID",
+    1,
+    num_probes - 1,
+    valinit=1,
+    valstep=range(1, num_probes),
 )
-
-
-td = np.empty((len(time), 2, 2))
-td[:, 0, 0] = time
-td[:, 1, 0] = time
 
 
 def time_sliders_on_changed(value):

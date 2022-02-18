@@ -2,16 +2,15 @@
 name = "efit_demo"
 version = "0.1.0"
 description = ""
-authors = ["bruvio <bruno.viola@pm.me>"]
+authors = ["bruvio <bruno.viola@protonmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
-dash = "^2.1.0"
-pandas = "^1.4.0"
+python = "3.7.1"
+pandas = "^1.3"
 netCDF4 = "^1.5.8"
+dash = "^2.1.0"
 matplotlib = "^3.5.1"
 PyQt5 = "^5.15.6"
-jupyter = "^1.0.0"
 
 [tool.poetry.dev-dependencies]
 
